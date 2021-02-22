@@ -1,0 +1,74 @@
+---
+# tasks file for ibmcloud_cli
+
+- name: create user ansible tmp directory
+  file:
+    path: /home/{{ user }}/.ansible/tmp
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: '0700'
+
+- name: Download IBM Cloud standalone CLI
+  become: true
+  become_user: root 
+  become_method: sudo
+  get_url: 
+    url: https://raw.githubusercontent.com/IBM-Cloud/ibm-cloud-developer-tools/master/linux-installer/idt-installer
+    dest: '/root/idt-installer.sh'
+    mode: '0700'
+   
+- name: Install IBM Cloud standalone CLI
+  become: true
+  become_user: root 
+  become_method: sudo
+  shell: /root/idt-installer.sh
+  args:
+    creates: /usr/local/bin/ibmcloud
+
+- name: enable Docker
+  become: true
+  become_user: root 
+  become_method: sudo
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: add target user to Docker group
+  become: true
+  become_user: root
+  become_method: sudo
+  user:
+    append: yes
+    name: "{{ user }}"
+    groups: [ docker ]
+
+
+- name: Install IBM Cloud useful CLI plugin - container-service
+  become: true 
+  become_user: "{{ user }}"
+  shell: /usr/local/bin/ibmcloud plugin install container-service -f
+  args:
+    creates: /home/{{ user }}/.bluemix/plugins/container-service
+
+- name: Install IBM Cloud useful CLI plugin - container-registry
+  become: true 
+  become_user: "{{ user }}"
+  shell: /usr/local/bin/ibmcloud plugin install container-registry -f
+  args:
+    creates: /home/{{ user }}/.bluemix/plugins/container-registry
+
+- name: Install IBM Cloud useful CLI plugin - vpc-infrastructure
+  become: true 
+  become_user: "{{ user }}"
+  shell: /usr/local/bin/ibmcloud plugin install vpc-infrastructure -f
+  args:
+    creates: /home/{{ user }}/.bluemix/plugins/vpc-infrastructure
+
+- name: Install IBM Cloud useful CLI plugin - cloud-object-storage
+  become: true 
+  become_user: "{{ user }}"
+  shell: /usr/local/bin/ibmcloud plugin install cloud-object-storage -f
+  args:
+    creates: /home/{{ user }}/.bluemix/plugins/cloud-object-storage

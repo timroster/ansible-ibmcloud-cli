@@ -1,0 +1,3 @@
+---
+# defaults file for ibmcloud_cli - a user is required for several tasks define here to allow for easy override
+user: 'root'

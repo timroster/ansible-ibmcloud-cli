@@ -1,0 +1,9 @@
+---
+- name: Install IBM Cloud CLI
+  remote_user: root
+  hosts: clihosts
+  
+  roles:
+    - role: ibmcloud_cli
+      vars:
+        user: 'timro'

@@ -1,0 +1,3 @@
+---
+# vars file for ibmcloud_cli - a user is required for several tasks
+#user: 'root'

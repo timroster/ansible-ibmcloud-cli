@@ -1,0 +1,2 @@
+[clihosts]
+192.168.123.192 ansible_python_interpreter=/usr/bin/python3
